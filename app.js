@@ -73,6 +73,8 @@ const roleMap = {
 };
 
 let currentUser = null;
+let bookingCalendarDate = new Date();
+let tutorCalendarDate = new Date();
 
 function getOffsetDate(offset) {
   const date = new Date();
@@ -100,12 +102,20 @@ function bindEvents() {
   });
   document.querySelector("#googleSignIn").addEventListener("click", () => signIn("Google"));
   document.querySelector("#signOut").addEventListener("click", signOut);
+  document.querySelector("#bookingPrevMonth").addEventListener("click", () => changeCalendarMonth("booking", -1));
+  document.querySelector("#bookingNextMonth").addEventListener("click", () => changeCalendarMonth("booking", 1));
+  document.querySelector("#tutorPrevMonth").addEventListener("click", () => changeCalendarMonth("tutor", -1));
+  document.querySelector("#tutorNextMonth").addEventListener("click", () => changeCalendarMonth("tutor", 1));
   subjectCategory.addEventListener("change", () => {
     updateSubjects();
     updateTutorOptions();
   });
   subjectName.addEventListener("change", updateTutorOptions);
   tutorPreference.addEventListener("change", updateTutorOptions);
+  sessionDate.addEventListener("change", () => {
+    bookingCalendarDate = new Date(`${sessionDate.value}T12:00:00`);
+    renderCalendars();
+  });
   preferredTutor.addEventListener("change", () => {
     if (preferredTutor.value !== "any") {
       tutorPreference.value = "specific";
@@ -235,6 +245,7 @@ function renderAll() {
   renderBooking();
   renderTutor();
   renderAdmin();
+  renderCalendars();
 }
 
 function renderBooking() {
@@ -266,6 +277,105 @@ function renderTutor() {
   document.querySelector("#monthHours").textContent = completedHours.toFixed(1);
   document.querySelector("#yearHours").textContent = (completedHours + 8).toFixed(1);
   document.querySelector("#lifetimeHours").textContent = (completedHours + 24).toFixed(1);
+}
+
+function renderCalendars() {
+  renderCalendar({
+    container: document.querySelector("#bookingCalendar"),
+    label: document.querySelector("#bookingMonthLabel"),
+    monthDate: bookingCalendarDate,
+    sessionsToShow: sessions.filter((session) => ["Pending", "Accepted", "Completed"].includes(session.status)),
+    selectedDate: sessionDate.value,
+    onSelectDate: (date) => {
+      sessionDate.value = date;
+      bookingCalendarDate = new Date(`${date}T12:00:00`);
+      renderCalendars();
+    },
+  });
+
+  renderCalendar({
+    container: document.querySelector("#tutorCalendar"),
+    label: document.querySelector("#tutorMonthLabel"),
+    monthDate: tutorCalendarDate,
+    sessionsToShow: sessions.filter((session) => {
+      const acceptedForTutor = session.tutor === demoTutor && ["Accepted", "Completed"].includes(session.status);
+      return acceptedForTutor || canTutorSeeRequest(session);
+    }),
+    selectedDate: "",
+    onSelectDate: null,
+  });
+}
+
+function renderCalendar({ container, label, monthDate, sessionsToShow, selectedDate, onSelectDate }) {
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const leadingBlanks = firstDay.getDay();
+
+  label.textContent = monthDate.toLocaleDateString(undefined, {
+    month: "long",
+    year: "numeric",
+  });
+
+  container.innerHTML = "";
+
+  for (let index = 0; index < leadingBlanks; index += 1) {
+    const empty = document.createElement("div");
+    empty.className = "calendar-day empty";
+    container.appendChild(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const dateValue = toDateValue(new Date(year, month, day));
+    const daySessions = sessionsToShow.filter((session) => session.date === dateValue);
+    const dayButton = document.createElement(onSelectDate ? "button" : "div");
+    dayButton.className = "calendar-day";
+    if (selectedDate === dateValue) {
+      dayButton.classList.add("selected");
+    }
+    if (onSelectDate) {
+      dayButton.type = "button";
+      dayButton.addEventListener("click", () => onSelectDate(dateValue));
+    }
+
+    const number = document.createElement("span");
+    number.className = "day-number";
+    number.textContent = day;
+    dayButton.appendChild(number);
+
+    const events = document.createElement("div");
+    events.className = "day-events";
+    daySessions.slice(0, 3).forEach((session) => {
+      const event = document.createElement("span");
+      event.className = `calendar-event ${session.status.toLowerCase()}`;
+      event.textContent = `${session.time} ${session.subject}`;
+      event.title = `${session.studentName} - ${session.status}`;
+      events.appendChild(event);
+    });
+
+    if (daySessions.length > 3) {
+      const more = document.createElement("span");
+      more.className = "calendar-event";
+      more.textContent = `+${daySessions.length - 3} more`;
+      events.appendChild(more);
+    }
+
+    dayButton.appendChild(events);
+    container.appendChild(dayButton);
+  }
+}
+
+function changeCalendarMonth(type, direction) {
+  const target = type === "booking" ? bookingCalendarDate : tutorCalendarDate;
+  target.setMonth(target.getMonth() + direction);
+  if (type === "booking") {
+    bookingCalendarDate = new Date(target);
+  } else {
+    tutorCalendarDate = new Date(target);
+  }
+  renderCalendars();
 }
 
 function canTutorSeeRequest(session) {
@@ -403,6 +513,13 @@ function formatDate(value) {
     day: "numeric",
     year: "numeric",
   });
+}
+
+function toDateValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 init();

@@ -18,6 +18,8 @@ The site helps parents and students request tutoring sessions, lets tutors accep
 - Email/password and Google sign-in placeholders
 - Subject categories for Math, Science, ACT, and English
 - Specific tutor or any qualified tutor option
+- Booking calendar for selecting request dates
+- Tutor calendar for accepted sessions and qualified pending requests
 - Tutor dashboard with pending requests and accepted schedule
 - Basic tutor conflict detection
 - Mark session as completed and enter tutoring hours

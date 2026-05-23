@@ -62,6 +62,30 @@
           <p class="muted">For parents and students</p>
         </div>
 
+        <section class="panel calendar-panel">
+          <div class="calendar-header">
+            <div>
+              <h3>Booking calendar</h3>
+              <p class="muted">Select a date for the request form.</p>
+            </div>
+            <div class="calendar-controls">
+              <button class="button icon-button" id="bookingPrevMonth" type="button" aria-label="Previous booking month">&lt;</button>
+              <strong id="bookingMonthLabel"></strong>
+              <button class="button icon-button" id="bookingNextMonth" type="button" aria-label="Next booking month">&gt;</button>
+            </div>
+          </div>
+          <div class="calendar-grid weekdays" aria-hidden="true">
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+          </div>
+          <div class="calendar-grid" id="bookingCalendar"></div>
+        </section>
+
         <div class="layout two-column">
           <form class="panel form-panel" id="requestForm">
             <div class="field-row">
@@ -174,6 +198,30 @@
             <p>Lifetime hours</p>
           </article>
         </div>
+
+        <section class="panel calendar-panel">
+          <div class="calendar-header">
+            <div>
+              <h3>Tutor calendar</h3>
+              <p class="muted">Accepted sessions and qualified pending requests.</p>
+            </div>
+            <div class="calendar-controls">
+              <button class="button icon-button" id="tutorPrevMonth" type="button" aria-label="Previous tutor month">&lt;</button>
+              <strong id="tutorMonthLabel"></strong>
+              <button class="button icon-button" id="tutorNextMonth" type="button" aria-label="Next tutor month">&gt;</button>
+            </div>
+          </div>
+          <div class="calendar-grid weekdays" aria-hidden="true">
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+          </div>
+          <div class="calendar-grid" id="tutorCalendar"></div>
+        </section>
 
         <div class="layout two-column">
           <section class="panel">
