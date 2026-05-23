@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lion Tutoring</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Harding Academy</p>
+        <h1>Lion Tutoring</h1>
+      </div>
+      <nav class="role-tabs hidden" id="roleTabs" aria-label="Choose dashboard">
+        <button class="tab active" data-role="booking">Parent / Student</button>
+        <button class="tab" data-role="tutor">Tutor</button>
+        <button class="tab" data-role="admin">Admin</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="auth-strip" id="authPanel" aria-labelledby="login-title">
+        <div>
+          <h2 id="login-title">Sign in or create an account</h2>
+          <p>Choose a role first, then enter the correct workspace.</p>
+        </div>
+        <form class="auth-form" id="authForm">
+          <label>
+            Role
+            <select id="authRole">
+              <option>Parent</option>
+              <option>Student</option>
+              <option>Tutor</option>
+              <option>Admin</option>
+            </select>
+          </label>
+          <label>
+            Email
+            <input id="authEmail" type="email" placeholder="name@example.com" required>
+          </label>
+          <label>
+            Password
+            <input id="authPassword" type="password" placeholder="Password" required>
+          </label>
+          <button type="submit" class="button primary">Continue</button>
+          <button type="button" class="button google" id="googleSignIn">Sign in with Google</button>
+        </form>
+      </section>
+
+      <section class="signed-in-bar hidden" id="signedInBar">
+        <p id="signedInText"></p>
+        <button class="button" id="signOut" type="button">Sign out</button>
+      </section>
+
+      <section class="dashboard" id="bookingPanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Booking</p>
+            <h2>Request a tutoring session</h2>
+          </div>
+          <p class="muted">For parents and students</p>
+        </div>
+
+        <div class="layout two-column">
+          <form class="panel form-panel" id="requestForm">
+            <div class="field-row">
+              <label>
+                Requesting as
+                <select id="requesterType">
+                  <option>Student</option>
+                  <option>Parent</option>
+                </select>
+              </label>
+              <label>
+                Student name
+                <input id="studentName" type="text" value="Avery Chen" required>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label>
+                Grade
+                <select id="gradeLevel">
+                  <option>9</option>
+                  <option selected>10</option>
+                  <option>11</option>
+                  <option>12</option>
+                </select>
+              </label>
+              <label>
+                Contact email
+                <input id="contactEmail" type="email" value="avery@example.com" required>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label>
+                Subject category
+                <select id="subjectCategory"></select>
+              </label>
+              <label>
+                Subject
+                <select id="subjectName"></select>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label>
+                Tutor preference
+                <select id="tutorPreference">
+                  <option value="any">Any qualified tutor</option>
+                  <option value="specific">Specific tutor</option>
+                </select>
+              </label>
+              <label>
+                Preferred tutor
+                <select id="preferredTutor"></select>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label>
+                Date
+                <input id="sessionDate" type="date" required>
+              </label>
+              <label>
+                Time
+                <select id="sessionTime">
+                  <option>3:30 PM</option>
+                  <option selected>4:00 PM</option>
+                  <option>4:30 PM</option>
+                  <option>5:00 PM</option>
+                  <option>5:30 PM</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              What should the tutor help with?
+              <textarea id="helpText" rows="4">I need help reviewing homework questions and preparing for my next quiz.</textarea>
+            </label>
+
+            <button class="button primary wide" type="submit">Submit request</button>
+          </form>
+
+          <aside class="panel">
+            <h3>My requests</h3>
+            <div class="request-list" id="bookingRequests"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="dashboard" id="tutorPanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Tutor Dashboard</p>
+            <h2>Accept sessions and track hours</h2>
+          </div>
+          <p class="muted">Demo tutor: Maya Patel</p>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat">
+            <span id="monthHours">0</span>
+            <p>This month</p>
+          </article>
+          <article class="stat">
+            <span id="yearHours">0</span>
+            <p>This school year</p>
+          </article>
+          <article class="stat">
+            <span id="lifetimeHours">0</span>
+            <p>Lifetime hours</p>
+          </article>
+        </div>
+
+        <div class="layout two-column">
+          <section class="panel">
+            <h3>Pending requests</h3>
+            <div class="request-list" id="tutorPending"></div>
+          </section>
+
+          <section class="panel">
+            <h3>Accepted schedule</h3>
+            <div class="request-list" id="tutorSchedule"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="dashboard" id="adminPanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Admin Dashboard</p>
+            <h2>Club overview and spreadsheet export</h2>
+          </div>
+          <button class="button" id="exportCsv">Export CSV</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat">
+            <span id="totalRequests">0</span>
+            <p>Total requests</p>
+          </article>
+          <article class="stat">
+            <span id="pendingRequests">0</span>
+            <p>Pending</p>
+          </article>
+          <article class="stat">
+            <span id="completedRequests">0</span>
+            <p>Completed</p>
+          </article>
+        </div>
+
+        <section class="panel table-panel">
+          <div class="table-header">
+            <h3>Session records</h3>
+            <label>
+              Status filter
+              <select id="statusFilter">
+                <option>All</option>
+                <option>Pending</option>
+                <option>Accepted</option>
+                <option>Completed</option>
+                <option>Declined</option>
+              </select>
+            </label>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Requester</th>
+                  <th>Subject</th>
+                  <th>Tutor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Hours</th>
+                </tr>
+              </thead>
+              <tbody id="adminTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <template id="requestTemplate">
+      <article class="request-card">
+        <div>
+          <p class="card-title"></p>
+          <p class="card-meta"></p>
+          <p class="card-note"></p>
+        </div>
+        <div class="card-actions"></div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
